@@ -3,8 +3,14 @@
   --primary-color: #F8D0D0;
   --secondary-color: #D0E8E8;
   --funny-bg: #D0F8E8;
-  --bg-color: #FFF8F0;
-  --sidebar-bg: #D0C4F8;
+  --bg: #fff;           /* Fondo blanco */
+  --text: #3d2c00;      /* Texto oscuro */
+  --header: #ffd6e0;    /* Rosa claro para el header */
+  --accent: #e57373;    /* Rosa fuerte para detalles/acento */
+  --sidebar-bg: #fff;   /* Sidebar blanco */
+  --sidebar-link: #3d2c00;
+  --empty-bg: #fff9f9;  /* Fondo muy claro para mensajes vacíos */
+  --modal-bg: rgba(0,0,0,0.7);
   --shadow: rgba(0, 0, 0, 0.1);
   --text-color: #444;
   --heading-color: #333;
@@ -16,11 +22,17 @@
   margin: 0;
   padding: 0;
 }
+html, body {
+  height: 100%;
+  min-height: 100%;
+}
 body {
+  min-height: 100vh;
   display: flex;
+  flex-direction: column;
   font-family: 'Arial', sans-serif;
-  background-color: var(--bg-color);
-  color: var(--text-color);
+  background: var(--bg);
+  color: var(--text);
   height: 100vh;
 }
 
@@ -30,21 +42,49 @@ body {
   align-items: center;
   gap: 1em;
   margin: 1em 0 0 0;
-  padding-left: 0.5em;
+  padding: 1.2em 2em 1.2em 2em; /* top right bottom left */
+  background: var(--header);
+  color: var(--text);
+  box-shadow: 0 2px 5px var(--shadow);
+}
+
+/* Botón de tema a la derecha */
+.theme-toggle {
+  position: fixed;
+  top: 1.5em;
+  right: 2em;
+  z-index: 3000;
+  background: var(--header);
+  color: var(--text);
+  border: none;
+  border-radius: 50%;
+  font-size: 1.7em;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px var(--shadow);
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+.theme-toggle:hover {
+  background: var(--accent);
+  color: var(--bg);
 }
 
 /* Logo */
 .sidebar-logo {
   font-weight: bold;
   font-size: 1.3em;
-  color: #e57373;
-  margin: 0;
+  color: var(--accent);
+  margin-left: 0.5em;
 }
 
 /* Botón de menú al lado del logo */
 .sidebar-toggle {
-  background: #e57373;
-  color: #fff;
+  background: var(--accent);
+  color: var(--bg);
   border: none;
   font-size: 2em;
   padding: 0.2em 0.7em;
@@ -54,7 +94,7 @@ body {
   margin: 0;
 }
 .sidebar-toggle:hover {
-  background: #d32f2f;
+  background: var(--header);
 }
 
 /* --- Sidebar lateral --- */
@@ -64,9 +104,10 @@ body {
   left: -220px;
   width: 220px;
   height: 100vh;
-  background: #e57373;
-  color: #fff;
-  padding-top: 2em;
+  background: var(--sidebar-bg);
+  color: var(--sidebar-link);
+  padding: 2em 1em 2em 1em; /* top right bottom left */
+  border-radius: 16px;
   transition: left 0.3s;
   z-index: 2000;
   display: flex;
@@ -88,96 +129,96 @@ body {
 }
 .sidebar-links li a {
   display: block;
-  color: #fff;
+  color: var(--sidebar-link);
   text-decoration: none;
   padding: 1em 2em;
   font-size: 1.1em;
   transition: background 0.2s;
 }
 .sidebar-links li a:hover {
-  background: #d32f2f;
+  background: var(--header);
+  color: var(--accent);
+}
+
+/* Espacio extra para las galerías dentro de la sidebar */
+.sidebar .gallery,
+.sidebar .funny-gallery {
+  margin-top: 1em;
+  margin-bottom: 1em;
+  gap: 1em;
+}
+
+/* Si usas upload-section dentro de la sidebar */
+.sidebar .upload-section {
+  margin-top: 1em;
+  margin-bottom: 1em;
 }
 
 /* --- Botones de agregar fotos más sutiles --- */
 .upload-section {
-  margin: 1em 0;
-  text-align: left;
-  padding: 0.5em 0;
+  margin: 1.5em 0 2em 0;
+  padding: 0.7em 0;
 }
 .upload-label {
   display: inline-flex;
   align-items: center;
   gap: 0.5em;
-  background: #ffeaea;
-  color: #b94a48;
-  border: 1px dashed #e57373;
-  border-radius: 6px;
-  padding: 0.4em 1.2em;
-  font-size: 1em;
+  background: var(--accent);
+  color: var(--bg);
+  border: none;
+  border-radius: 25px;
+  padding: 0.6em 1.5em;
+  font-size: 1.1em;
   cursor: pointer;
-  transition: background 0.2s, border-color 0.2s;
+  transition: background 0.2s, color 0.2s;
 }
 .upload-label:hover {
-  background: #fff3f3;
-  border-color: #b94a48;
+  background: var(--header);
+  color: var(--accent);
 }
 .upload-label input[type="file"] {
   display: none;
 }
 
-/* --- Modal de imagen mejorado --- */
+/* --- Modal --- */
 .modal {
   display: none;
   position: fixed;
-  z-index: 1000;
-  left: 0; top: 0; width: 100vw; height: 100vh;
-  background: rgba(0,0,0,0.7);
-  justify-content: center;
+  z-index: 9999;
+  left: 0; top: 0; right: 0; bottom: 0;
+  background: var(--header, #ffe0ec); /* igual que el footer */
   align-items: center;
-  transition: opacity 0.2s;
+  justify-content: center;
 }
 .modal.show {
   display: flex;
-  animation: fadeIn 0.2s;
-}
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to   { opacity: 1; }
 }
 .modal-content {
-  background: transparent;
-  border: none;
-  box-shadow: none;
+  background: var(--empty-bg, #fff);
+  padding: 2em 2.5em;
+  border-radius: 14px;
+  box-shadow: 0 2px 16px var(--shadow, #ffd70055);
+  text-align: center;
   position: relative;
-  max-width: 90vw;
-  max-height: 90vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
 }
-#modal-img {
-  max-width: 80vw;
+.modal-close {
+  position: absolute;
+  top: 1em;
+  right: 1em;
+  font-size: 2em;
+  color: var(--accent, #e57373);
+  cursor: pointer;
+  background: none;
+  border: none;
+}
+
+/* Imagen centrada y sin borde extra */
+.modal-img {
+  max-width: 90vw;
   max-height: 80vh;
   border-radius: 12px;
-  box-shadow: 0 4px 24px rgba(0,0,0,0.4);
-  object-fit: contain;
-}
-.close-btn {
-  position: absolute;
-  top: -24px;
-  right: -24px;
-  background: #fff;
-  color: #e57373;
-  border-radius: 50%;
-  font-size: 2rem;
-  width: 40px;
-  height: 40px;
-  line-height: 38px;
-  text-align: center;
-  cursor: pointer;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-  border: none;
-  z-index: 10;
+  box-shadow: 0 2px 16px var(--shadow);
+  background: var(--empty-bg);
 }
 
 /* --- Responsive --- */
@@ -197,6 +238,9 @@ body {
   .upload-section {
     width: 100%;
   }
+  main, section {
+    padding: 1.2rem 2vw;
+  }
 }
 
 /* Ocultar secciones */
@@ -206,7 +250,7 @@ body {
 
 /* Content area */
 .content {
-  flex: 1;
+  flex: 1 0 auto;
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -214,11 +258,11 @@ body {
 
 /* Header and toggle */
 header {
-  background-color: var(--primary-color);
+  background: var(--header);
+  box-shadow: 0 2px 5px var(--shadow);
   padding: 1rem;
   display: flex;
   align-items: center;
-  box-shadow: 0 2px 5px var(--shadow);
 }
 #toggle-sidebar {
   background: none;
@@ -248,9 +292,9 @@ header nav a:hover {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: #e57373;
+  background: var(--header);
   padding: 0.5em 1em;
-  color: #fff;
+  color: var(--text);
   border-radius: 8px;
   margin-bottom: 1em;
   position: relative;
@@ -276,15 +320,18 @@ header nav a:hover {
   transition: all 0.3s;
 }
 .navbar-links li a {
-  color: #fff;
+  color: var(--text);
   text-decoration: none;
   font-weight: 500;
+}
+.navbar-links li a:hover {
+  color: var(--accent);
 }
 @media (max-width: 600px) {
   .navbar-links {
     display: none;
     flex-direction: column;
-    background: #e57373;
+    background: var(--header);
     position: absolute;
     top: 3em;
     right: 0.5em;
@@ -303,15 +350,24 @@ header nav a:hover {
 
 /* Main and sections */
 main {
-  padding: 2rem;
-  overflow-y: auto;
-  flex: 1;
+  padding: 2.5rem 3vw 2.5rem 3vw;
+  box-sizing: border-box;
 }
-#main-section {
-  padding: 0;
+/* #main-section ruleset removed because it was empty */
+section {
+  padding: 2.5rem 2vw;
+  margin-bottom: 2.5rem;
+  border-radius: 14px;
+  background: var(--empty-bg);
+  box-shadow: 0 2px 8px var(--shadow);
+}
+section + section {
+  margin-top: 2.5rem;
 }
 section h2 {
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
+  margin-top: 0;
+  font-size: 2rem;
   color: var(--heading-color);
 }
 
@@ -319,11 +375,11 @@ section h2 {
 .gallery {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-  gap: 1rem;
-  margin-bottom: 1rem;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
 }
 .gallery img {
-  border: 2px solid #f3e5e5;
+  border: 2px solid var(--empty-bg);
   box-shadow: 0 2px 8px rgba(0,0,0,0.07);
   transition: transform 0.2s, box-shadow 0.2s;
   border-radius: 8px;
@@ -362,12 +418,12 @@ section h2 {
 .funny-gallery {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-  gap: 1rem;
-  margin-bottom: 1rem;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
   margin-top: 0;
 }
 .funny-gallery img {
-  border: 2px solid #f3e5e5;
+  border: 2px solid var(--empty-bg);
   box-shadow: 0 2px 8px rgba(0,0,0,0.07);
   transition: transform 0.2s, box-shadow 0.2s;
   border-radius: 8px;
@@ -395,12 +451,12 @@ section h2 {
 
 /* Mensajes vacíos */
 .empty-message {
-  color: #b94a48;
-  background: #fff3f3;
-  border: 1px dashed #e57373;
-  border-radius: 8px;
-  padding: 1em;
-  margin-bottom: 1em;
+  color: var(--text);
+  background: var(--empty-bg);
+  border: 1px dashed var(--accent);
+  border-radius: 10px;
+  padding: 1.2em 1em;
+  margin: 1.5em 0;
   text-align: center;
   font-size: 1.1em;
 }
@@ -433,21 +489,28 @@ section h2 {
   background-color: #e8baba;
 }
 
-/* Footer */
+/* Footer moderno y fijo al fondo si hay poco contenido */
 footer {
-  background: #ffeaea;
-  color: #b94a48;
+  flex-shrink: 0;
+  margin-top: 0;
+  position: static;
+  bottom: auto;
+  left: auto;
+  background: var(--header);
+  color: var(--accent);
   text-align: center;
-  padding: 1em 0;
-  border-top: 1px solid #e57373;
-  margin-top: 2em;
+  padding: 1.5em 0;
+  border-top: 1px solid var(--accent);
+  font-size: 1em;
+  width: 100%;
+  box-shadow: 0 -2px 8px var(--shadow);
 }
 
 /* Splash/Loader */
 .splash {
   position: fixed;
   z-index: 9999;
-  background: #fffbe6;
+  background: var(--bg);
   top: 0; left: 0; right: 0; bottom: 0;
   display: flex;
   align-items: center;
@@ -509,7 +572,7 @@ footer {
 .splash-text {
   margin-top: 10px;
   font-size: 1.3em;
-  color: #e6b800;
+  color: var(--accent);
   font-family: 'Comic Sans MS', cursive, sans-serif;
 }
 
@@ -517,8 +580,8 @@ footer {
 .enter-btn {
   margin-top: 20px;
   padding: 12px 28px;
-  background: #ffe066;
-  color: #a0522d;
+  background: var(--accent);
+  color: var(--bg);
   border: none;
   border-radius: 25px;
   font-size: 1.1em;
@@ -528,6 +591,28 @@ footer {
   transition: background 0.2s, color 0.2s;
 }
 .enter-btn:hover {
-  background: #ffd700;
-  color: #fffbe6;
+  background: var(--header);
+  color: var(--accent);
+}
+
+/* Modo oscuro */
+body.dark {
+  --bg: #181818;         /* Fondo negro */
+  --text: #ffe066;       /* Texto amarillo */
+  --header: #232323;     /* Header negro */
+  --accent: #ffe066;     /* Amarillo para detalles/acento */
+  --sidebar-bg: #232323;
+  --sidebar-link: #ffe066;
+  --empty-bg: #232323;
+  --modal-bg: rgba(20,20,20,0.95);
+}
+
+.theme-toggle {
+  color: var(--text);
+  background: none;
+  border: none;
+  font-size: 1.5em;
+  cursor: pointer;
+  transition: color 0.2s;
+  color: var(--text);
 }

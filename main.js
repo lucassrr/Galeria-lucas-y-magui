@@ -17,6 +17,7 @@ const mainSection  = document.getElementById('main-section');
 const funnySection = document.getElementById('funny-section');
 const emptyGallery = document.getElementById('empty-gallery');
 const emptyFunny   = document.getElementById('empty-funny');
+const themeToggle  = document.getElementById('theme-toggle');
 
 // Mostrar/ocultar mensajes vacíos
 function updateEmptyMessages() {
@@ -122,45 +123,93 @@ funnyInput.addEventListener('change', e => handlePhotos(e.target, 'photos', funn
 
 // Cargar fotos al iniciar
 document.addEventListener('DOMContentLoaded', () => {
+  const enterBtn = document.getElementById('enter-gallery');
+  if (enterBtn) {
+    enterBtn.addEventListener('click', () => {
+      document.getElementById('splash').style.opacity = 0;
+      setTimeout(() => {
+        document.getElementById('splash').style.display = 'none';
+      }, 700);
+    });
+  }
+
+  const modal = document.getElementById('modal');
+  const modalClose = document.getElementById('modal-close');
+
+  if (modal && modalClose) {
+    modalClose.addEventListener('click', () => {
+      modal.classList.remove('show');
+      // Aquí puedes ocultar el splash si quieres:
+      document.getElementById('splash').style.opacity = 0;
+      setTimeout(() => {
+        document.getElementById('splash').style.display = 'none';
+      }, 700);
+    });
+
+    // Cerrar modal al hacer click fuera del contenido
+    modal.addEventListener('click', e => {
+      if (e.target === modal) {
+        modal.classList.remove('show');
+        document.getElementById('splash').style.opacity = 0;
+        setTimeout(() => {
+          document.getElementById('splash').style.display = 'none';
+        }, 700);
+      }
+    });
+  }
+
+  // Sidebar toggle
+  if (sidebarToggle && sidebar) {
+    sidebarToggle.addEventListener('click', () => {
+      sidebar.classList.toggle('active');
+      sidebarToggle.classList.toggle('active');
+    });
+  }
+
+  // Sidebar links
+  document.querySelectorAll('.sidebar-links a').forEach(link => {
+    link.addEventListener('click', () => {
+      if (sidebar && sidebarToggle) {
+        sidebar.classList.remove('active');
+        sidebarToggle.classList.remove('active');
+      }
+    });
+  });
+
+  // Navegación de secciones
+  const navHome = document.getElementById('nav-home');
+  const navFunny = document.getElementById('nav-funny');
+  if (navHome && mainSection && funnySection && sidebar) {
+    navHome.addEventListener('click', e => {
+      e.preventDefault();
+      mainSection.classList.remove('hidden');
+      funnySection.classList.add('hidden');
+      sidebar.classList.remove('active');
+    });
+  }
+  if (navFunny && mainSection && funnySection && sidebar) {
+    navFunny.addEventListener('click', e => {
+      e.preventDefault();
+      mainSection.classList.add('hidden');
+      funnySection.classList.remove('hidden');
+      sidebar.classList.remove('active');
+    });
+  }
+
+  // Alternar tema oscuro
+  if (themeToggle) {
+    themeToggle.addEventListener('click', () => {
+      document.body.classList.toggle('dark');
+      themeToggle.textContent = document.body.classList.contains('dark') ? '☀️' : '🌙';
+    });
+  }
+
+  // Cargar fotos al iniciar
   loadPhotosFromSupabase('gallery', gallery);
   loadPhotosFromSupabase('funny_gallery', funnyGallery);
-  funnySection.classList.add('hidden');
-  mainSection.classList.remove('hidden');
+  if (funnySection && mainSection) {
+    funnySection.classList.add('hidden');
+    mainSection.classList.remove('hidden');
+  }
   updateEmptyMessages();
-});
-
-// Sidebar desplegable
-sidebarToggle.addEventListener('click', () => {
-  sidebar.classList.toggle('active');
-  sidebarToggle.classList.toggle('active');
-});
-
-// Cierra el sidebar al hacer click en un enlace
-document.querySelectorAll('.sidebar-links a').forEach(link => {
-  link.addEventListener('click', () => {
-    sidebar.classList.remove('active');
-    sidebarToggle.classList.remove('active');
-  });
-});
-
-// Navegación de secciones
-document.getElementById('nav-home').addEventListener('click', e => {
-  e.preventDefault();
-  mainSection.classList.remove('hidden');
-  funnySection.classList.add('hidden');
-  sidebar.classList.remove('active');
-});
-document.getElementById('nav-funny').addEventListener('click', e => {
-  e.preventDefault();
-  mainSection.classList.add('hidden');
-  funnySection.classList.remove('hidden');
-  sidebar.classList.remove('active');
-});
-
-// Ocultar splash solo al hacer clic en el botón
-document.getElementById('enter-gallery').addEventListener('click', () => {
-  document.getElementById('splash').style.opacity = 0;
-  setTimeout(() => {
-    document.getElementById('splash').style.display = 'none';
-  }, 700);
 });

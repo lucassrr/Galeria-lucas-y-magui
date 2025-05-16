@@ -32,6 +32,8 @@
         </ul>
       </nav>
     </header>
+     <!-- Botón de tema fuera del header-bar -->
+    <button id="theme-toggle" class="theme-toggle" title="Cambiar tema">🌙</button>
     <main>
       <section id="main-section">
         <h2>Galería</h2>
@@ -56,15 +58,18 @@
         </div>
       </section>
     </main>
-    <div id="modal" class="modal">
-      <div class="modal-content">
-        <span class="close-btn" id="modal-close">×</span>
-        <img src="" alt="Imagen Ampliada" id="modal-img">
-      </div>
+    
+  </div>
+ 
+  <!-- Modal para mensaje de bienvenida -->
+  <div id="modal" class="modal">
+    <div class="modal-content">
+      <span id="modal-close" class="modal-close">&times;</span>
+      <p>¡Bienvenido a la galería de Luquitas y Magui! 🌻</p>
     </div>
-    <footer>&copy; 2025 Mi Galería Romántica</footer>
   </div>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
   <script src="main.js"></script>
+  <footer>&copy; 2025 Mi Galería Romántica</footer>
 </body>
 </html>
