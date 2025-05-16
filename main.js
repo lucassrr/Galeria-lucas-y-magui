@@ -96,7 +96,13 @@ function createPhoto(url, container, table, id = null) {
   const img = document.createElement('img');
   img.src = url;
   img.alt = "Foto subida";
-  img.addEventListener('click', () => openModal(url));
+  img.addEventListener('click', () => {
+    // Usar el modal de imágenes
+    const imgModal = document.getElementById('img-modal');
+    const imgModalImg = document.getElementById('img-modal-img');
+    imgModalImg.src = url;
+    imgModal.classList.add('show');
+  });
   const del = document.createElement('span');
   del.textContent = '🗑️';
   del.className = 'trash-icon';
@@ -203,6 +209,31 @@ document.addEventListener('DOMContentLoaded', () => {
       themeToggle.textContent = document.body.classList.contains('dark') ? '☀️' : '🌙';
     });
   }
+
+  // Modal de imagen
+  const imgModal = document.getElementById('img-modal');
+  const imgModalImg = document.getElementById('img-modal-img');
+  const imgModalClose = document.getElementById('img-modal-close');
+
+  // Delegación de eventos para ambas galerías
+  document.body.addEventListener('click', function(e) {
+    if (e.target.matches('.gallery img, .funny-gallery img')) {
+      imgModalImg.src = e.target.src;
+      imgModal.classList.add('show');
+    }
+  });
+
+  imgModalClose.addEventListener('click', () => {
+    imgModal.classList.remove('show');
+    imgModalImg.src = '';
+  });
+
+  imgModal.addEventListener('click', e => {
+    if (e.target === imgModal) {
+      imgModal.classList.remove('show');
+      imgModalImg.src = '';
+    }
+  });
 
   // Cargar fotos al iniciar
   loadPhotosFromSupabase('gallery', gallery);

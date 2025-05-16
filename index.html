@@ -24,6 +24,7 @@
       <div class="header-bar">
         <button class="sidebar-toggle" id="sidebar-toggle">☰</button>
         <span class="sidebar-logo">Galería De Luquitas y Magui</span>
+        <button id="theme-toggle" class="theme-toggle" title="Cambiar tema">🌙</button>
       </div>
       <nav class="sidebar" id="sidebar">
         <ul class="sidebar-links">
@@ -32,8 +33,6 @@
         </ul>
       </nav>
     </header>
-     <!-- Botón de tema fuera del header-bar -->
-    <button id="theme-toggle" class="theme-toggle" title="Cambiar tema">🌙</button>
     <main>
       <section id="main-section">
         <h2>Galería</h2>
@@ -68,6 +67,13 @@
       <p>¡Bienvenido a la galería de Luquitas y Magui! 🌻</p>
     </div>
   </div>
+
+  <!-- Modal para vista ampliada de imágenes -->
+  <div id="img-modal" class="modal">
+    <span id="img-modal-close" class="modal-close">&times;</span>
+    <img id="img-modal-img" class="modal-img" src="" alt="Vista ampliada">
+  </div>
+
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
   <script src="main.js"></script>
   <footer>&copy; 2025 Mi Galería Romántica</footer>
