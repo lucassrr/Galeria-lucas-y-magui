@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+  <title>Galería Romántica</title>
+</head>
+<body>
+  <div class="content">
+    <header>
+      <div class="header-bar">
+        <button class="sidebar-toggle" id="sidebar-toggle">☰</button>
+        <span class="sidebar-logo">Galería De Luquitas y Magui</span>
+      </div>
+      <nav class="sidebar" id="sidebar">
+        <ul class="sidebar-links">
+          <li><a href="#" id="nav-home">Inicio</a></li>
+          <li><a href="#" id="nav-funny">Fotos Graciosas</a></li>
+        </ul>
+      </nav>
+    </header>
+    <main>
+      <section id="main-section">
+        <h2>Galería</h2>
+        <div id="empty-gallery" class="empty-message">¡Aún no hay fotos! Usa el botón para agregar la primera 😊</div>
+        <div class="gallery" id="gallery"></div>
+        <div class="upload-section">
+          <label for="photo-input" class="upload-label">
+            <span>📷 Agregar más fotos</span>
+            <input type="file" id="photo-input" accept="image/*" multiple>
+          </label>
+        </div>
+      </section>
+      <section id="funny-section" class="hidden">
+        <h2>Fotos Graciosas</h2>
+        <div id="empty-funny" class="empty-message">¡No hay fotos graciosas todavía! Sube una y sorprende 😁</div>
+        <div class="funny-gallery" id="funny-gallery"></div>
+        <div class="upload-section">
+          <label for="funny-input" class="upload-label">
+            <span>😂 Agregar fotos graciosas</span>
+            <input type="file" id="funny-input" accept="image/*" multiple>
+          </label>
+        </div>
+      </section>
+    </main>
+    <div id="modal" class="modal">
+      <div class="modal-content">
+        <span class="close-btn" id="modal-close">×</span>
+        <img src="" alt="Imagen Ampliada" id="modal-img">
+      </div>
+    </div>
+    <footer>&copy; 2025 Mi Galería Romántica</footer>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  <script src="main.js"></script>
+</body>
+</html>

@@ -1,0 +1,444 @@
+/* Root variables for theme colors */
+:root {
+  --primary-color: #F8D0D0;
+  --secondary-color: #D0E8E8;
+  --funny-bg: #D0F8E8;
+  --bg-color: #FFF8F0;
+  --sidebar-bg: #D0C4F8;
+  --shadow: rgba(0, 0, 0, 0.1);
+  --text-color: #444;
+  --heading-color: #333;
+}
+
+/* Global resets and base styles */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+body {
+  display: flex;
+  font-family: 'Arial', sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  height: 100vh;
+}
+
+/* --- Barra superior --- */
+.header-bar {
+  display: flex;
+  align-items: center;
+  gap: 1em;
+  margin: 1em 0 0 0;
+  padding-left: 0.5em;
+}
+
+/* Logo */
+.sidebar-logo {
+  font-weight: bold;
+  font-size: 1.3em;
+  color: #e57373;
+  margin: 0;
+}
+
+/* Botón de menú al lado del logo */
+.sidebar-toggle {
+  background: #e57373;
+  color: #fff;
+  border: none;
+  font-size: 2em;
+  padding: 0.2em 0.7em;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s;
+  margin: 0;
+}
+.sidebar-toggle:hover {
+  background: #d32f2f;
+}
+
+/* --- Sidebar lateral --- */
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: -220px;
+  width: 220px;
+  height: 100vh;
+  background: #e57373;
+  color: #fff;
+  padding-top: 2em;
+  transition: left 0.3s;
+  z-index: 2000;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  box-shadow: 2px 0 8px rgba(0,0,0,0.15);
+}
+.sidebar.active {
+  left: 0;
+}
+.sidebar-links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+}
+.sidebar-links li {
+  width: 100%;
+}
+.sidebar-links li a {
+  display: block;
+  color: #fff;
+  text-decoration: none;
+  padding: 1em 2em;
+  font-size: 1.1em;
+  transition: background 0.2s;
+}
+.sidebar-links li a:hover {
+  background: #d32f2f;
+}
+
+/* --- Botones de agregar fotos más sutiles --- */
+.upload-section {
+  margin: 1em 0;
+  text-align: left;
+  padding: 0.5em 0;
+}
+.upload-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  background: #ffeaea;
+  color: #b94a48;
+  border: 1px dashed #e57373;
+  border-radius: 6px;
+  padding: 0.4em 1.2em;
+  font-size: 1em;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+}
+.upload-label:hover {
+  background: #fff3f3;
+  border-color: #b94a48;
+}
+.upload-label input[type="file"] {
+  display: none;
+}
+
+/* --- Modal de imagen mejorado --- */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0; top: 0; width: 100vw; height: 100vh;
+  background: rgba(0,0,0,0.7);
+  justify-content: center;
+  align-items: center;
+  transition: opacity 0.2s;
+}
+.modal.show {
+  display: flex;
+  animation: fadeIn 0.2s;
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+.modal-content {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  position: relative;
+  max-width: 90vw;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+#modal-img {
+  max-width: 80vw;
+  max-height: 80vh;
+  border-radius: 12px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.4);
+  object-fit: contain;
+}
+.close-btn {
+  position: absolute;
+  top: -24px;
+  right: -24px;
+  background: #fff;
+  color: #e57373;
+  border-radius: 50%;
+  font-size: 2rem;
+  width: 40px;
+  height: 40px;
+  line-height: 38px;
+  text-align: center;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  border: none;
+  z-index: 10;
+}
+
+/* --- Responsive --- */
+@media (max-width: 700px) {
+  .sidebar {
+    width: 70vw;
+    min-width: 160px;
+    left: -70vw;
+  }
+  .sidebar.active {
+    left: 0;
+  }
+  .gallery,
+  .funny-gallery {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  }
+  .upload-section {
+    width: 100%;
+  }
+}
+
+/* Ocultar secciones */
+.hidden {
+  display: none !important;
+}
+
+/* Content area */
+.content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Header and toggle */
+header {
+  background-color: var(--primary-color);
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 2px 5px var(--shadow);
+}
+#toggle-sidebar {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  margin-right: 1rem;
+}
+header h1 {
+  flex: 1;
+  font-size: 1.5rem;
+  color: var(--heading-color);
+}
+header nav a {
+  margin-left: 1rem;
+  text-decoration: none;
+  color: var(--text-color);
+  font-weight: bold;
+  transition: color 0.2s;
+}
+header nav a:hover {
+  color: #000;
+}
+
+/* Navbar styles */
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #e57373;
+  padding: 0.5em 1em;
+  color: #fff;
+  border-radius: 8px;
+  margin-bottom: 1em;
+  position: relative;
+}
+.navbar-logo {
+  font-weight: bold;
+  font-size: 1.2em;
+}
+.navbar-toggle {
+  display: none;
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 1.5em;
+  cursor: pointer;
+}
+.navbar-links {
+  list-style: none;
+  display: flex;
+  gap: 1em;
+  margin: 0;
+  padding: 0;
+  transition: all 0.3s;
+}
+.navbar-links li a {
+  color: #fff;
+  text-decoration: none;
+  font-weight: 500;
+}
+@media (max-width: 600px) {
+  .navbar-links {
+    display: none;
+    flex-direction: column;
+    background: #e57373;
+    position: absolute;
+    top: 3em;
+    right: 0.5em;
+    width: 160px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    z-index: 10;
+  }
+  .navbar-links.active {
+    display: flex;
+  }
+  .navbar-toggle {
+    display: block;
+  }
+}
+
+/* Main and sections */
+main {
+  padding: 2rem;
+  overflow-y: auto;
+  flex: 1;
+}
+#main-section {
+  padding: 0;
+}
+section h2 {
+  margin-bottom: 1rem;
+  color: var(--heading-color);
+}
+
+/* Gallery styles */
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+.gallery img {
+  border: 2px solid #f3e5e5;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  transition: transform 0.2s, box-shadow 0.2s;
+  border-radius: 8px;
+  object-fit: cover;
+  width: 100%;
+  height: 150px;
+}
+.gallery img:hover {
+  transform: scale(1.04);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.18);
+  cursor: pointer;
+}
+.photo-container {
+  position: relative;
+}
+.trash-icon {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: rgba(255,255,255,0.8);
+  border-radius: 50%;
+  padding: 4px;
+  cursor: pointer;
+  z-index: 2;
+}
+
+/* Funny section unique styling */
+#funny-section {
+  background: none;
+  padding: 0 2rem;
+  border-radius: 12px;
+  margin-top: 0;         /* Elimina espacio extra arriba */
+  padding-top: 2rem;     /* Igual que main-section si lo usas */
+  padding-bottom: 2rem;
+}
+.funny-gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1rem;
+  margin-top: 0;
+}
+.funny-gallery img {
+  border: 2px solid #f3e5e5;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  transition: transform 0.2s, box-shadow 0.2s;
+  border-radius: 8px;
+  object-fit: cover;
+  width: 100%;
+  height: 150px;
+}
+.funny-gallery img:hover {
+  transform: scale(1.04);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.18);
+  cursor: pointer;
+}
+#funny-section .upload-section {
+  margin-top: 0;
+}
+
+/* Quita el formato circular solo en fotos graciosas */
+#funny-section .funny-gallery img {
+  border-radius: 8px !important;   /* Igual que en la galería principal */
+  object-fit: cover;
+  width: 100%;
+  height: 150px;
+  /* Elimina cualquier border-radius: 50% que tengas */
+}
+
+/* Mensajes vacíos */
+.empty-message {
+  color: #b94a48;
+  background: #fff3f3;
+  border: 1px dashed #e57373;
+  border-radius: 8px;
+  padding: 1em;
+  margin-bottom: 1em;
+  text-align: center;
+  font-size: 1.1em;
+}
+
+/* Upload & PDF */
+#main-section,
+#funny-section {
+  display: flex;
+  flex-direction: column;
+}
+#main-section .upload-section,
+#funny-section .upload-section {
+  align-self: flex-start;
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+}
+.pdf-download {
+  position: fixed;
+  bottom: 1rem;
+  right: 1rem;
+  padding: 0.5rem 1rem;
+  background-color: var(--primary-color);
+  color: var(--text-color);
+  text-decoration: none;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px var(--shadow);
+  transition: background-color 0.3s;
+}
+.pdf-download:hover {
+  background-color: #e8baba;
+}
+
+/* Footer */
+footer {
+  background: #ffeaea;
+  color: #b94a48;
+  text-align: center;
+  padding: 1em 0;
+  border-top: 1px solid #e57373;
+  margin-top: 2em;
+}
