@@ -156,3 +156,11 @@ document.getElementById('nav-funny').addEventListener('click', e => {
   funnySection.classList.remove('hidden');
   sidebar.classList.remove('active');
 });
+
+// Ocultar splash solo al hacer clic en el botón
+document.getElementById('enter-gallery').addEventListener('click', () => {
+  document.getElementById('splash').style.opacity = 0;
+  setTimeout(() => {
+    document.getElementById('splash').style.display = 'none';
+  }, 700);
+});
