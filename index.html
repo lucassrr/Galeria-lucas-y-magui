@@ -4,29 +4,30 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style-additions.css">
   <title>Galería Romántica</title>
 </head>
 <body>
-  <div id="splash" class="splash">
+  <div id="splash" class="splash" role="dialog" aria-labelledby="splash-text">
     <div class="sunflower-container">
-      <div class="sunflower-css">
+      <div class="sunflower-css" aria-hidden="true">
         <div class="petals"></div>
         <div class="center"></div>
         <div class="stem"></div>
         <div class="leaf"></div>
       </div>
-      <div class="splash-text">Bienvenido a la galería</div>
+      <div id="splash-text" class="splash-text">Bienvenido a la galería</div>
       <button id="enter-gallery" class="enter-btn">Acceder a la galería</button>
     </div>
   </div>
   <div class="content">
     <header>
       <div class="header-bar">
-        <button class="sidebar-toggle" id="sidebar-toggle">☰</button>
+        <button class="sidebar-toggle" id="sidebar-toggle" aria-label="Abrir menú" aria-expanded="false" aria-controls="sidebar">☰</button>
         <span class="sidebar-logo">Galería De Luquitas y Magui</span>
-        <button id="theme-toggle" class="theme-toggle" title="Cambiar tema">🌙</button>
+        <button id="theme-toggle" class="theme-toggle" title="Cambiar tema" aria-label="Cambiar tema claro/oscuro">🌙</button>
       </div>
-      <nav class="sidebar" id="sidebar">
+      <nav class="sidebar" id="sidebar" aria-label="Menú principal">
         <ul class="sidebar-links">
           <li><a href="#" id="nav-home">Inicio</a></li>
           <li><a href="#" id="nav-funny">Fotos Graciosas</a></li>
@@ -34,48 +35,79 @@
       </nav>
     </header>
     <main>
-      <section id="main-section">
-        <h2>Galería</h2>
+      <section id="main-section" aria-labelledby="gallery-title">
+        <h2 id="gallery-title">Galería <span id="gallery-counter" class="photo-counter"></span></h2>
         <div id="empty-gallery" class="empty-message">¡Aún no hay fotos! Usa el botón para agregar la primera 😊</div>
-        <div class="gallery" id="gallery"></div>
+        <div class="gallery" id="gallery" role="region" aria-label="Galería de fotos"></div>
+        <div class="pagination" id="gallery-pagination" aria-label="Paginación de galería"></div>
         <div class="upload-section">
           <label for="photo-input" class="upload-label">
             <span>📷 Agregar más fotos</span>
             <input type="file" id="photo-input" accept="image/*" multiple>
           </label>
+          <div id="drop-area" class="drop-area" aria-label="Área para soltar fotos">
+            <p>O arrastra y suelta tus fotos aquí</p>
+          </div>
+        </div>
+        <div id="upload-progress" class="progress-container" aria-live="polite" hidden>
+          <div class="progress-bar" id="upload-progress-bar"></div>
+          <div class="progress-text" id="upload-progress-text">Subiendo: 0%</div>
         </div>
       </section>
-      <section id="funny-section" class="hidden">
-        <h2>Fotos Graciosas</h2>
+      <section id="funny-section" class="hidden" aria-labelledby="funny-title">
+        <h2 id="funny-title">Fotos Graciosas <span id="funny-counter" class="photo-counter"></span></h2>
         <div id="empty-funny" class="empty-message">¡No hay fotos graciosas todavía! Sube una y sorprende 😁</div>
-        <div class="funny-gallery" id="funny-gallery"></div>
+        <div class="funny-gallery" id="funny-gallery" role="region" aria-label="Galería de fotos graciosas"></div>
+        <div class="pagination" id="funny-pagination" aria-label="Paginación de galería graciosa"></div>
         <div class="upload-section">
           <label for="funny-input" class="upload-label">
             <span>😂 Agregar fotos graciosas</span>
             <input type="file" id="funny-input" accept="image/*" multiple>
           </label>
+          <div id="funny-drop-area" class="drop-area" aria-label="Área para soltar fotos graciosas">
+            <p>O arrastra y suelta tus fotos graciosas aquí</p>
+          </div>
+        </div>
+        <div id="funny-upload-progress" class="progress-container" aria-live="polite" hidden>
+          <div class="progress-bar" id="funny-upload-progress-bar"></div>
+          <div class="progress-text" id="funny-upload-progress-text">Subiendo: 0%</div>
         </div>
       </section>
     </main>
-    
   </div>
  
   <!-- Modal para mensaje de bienvenida -->
-  <div id="modal" class="modal">
+  <div id="modal" class="modal" role="dialog" aria-labelledby="modal-message">
     <div class="modal-content">
-      <span id="modal-close" class="modal-close">&times;</span>
-      <p>¡Bienvenido a la galería de Luquitas y Magui! 🌻</p>
+      <span id="modal-close" class="modal-close" aria-label="Cerrar">&times;</span>
+      <p id="modal-message">¡Bienvenido a la galería de Luquitas y Magui! 🌻</p>
     </div>
   </div>
 
   <!-- Modal para vista ampliada de imágenes -->
-  <div id="img-modal" class="modal">
-    <span id="img-modal-close" class="modal-close">&times;</span>
+  <div id="img-modal" class="modal" role="dialog" aria-labelledby="img-modal-title">
+    <span id="img-modal-close" class="modal-close" aria-label="Cerrar">&times;</span>
     <img id="img-modal-img" class="modal-img" src="" alt="Vista ampliada">
+    <h3 id="img-modal-title" class="visually-hidden">Vista ampliada de imagen</h3>
+  </div>
+
+  <!-- Modal de confirmación para eliminar -->
+  <div id="confirm-modal" class="modal" role="dialog" aria-labelledby="confirm-title">
+    <div class="modal-content">
+      <h3 id="confirm-title">¿Eliminar esta foto?</h3>
+      <p>Esta acción no se puede deshacer.</p>
+      <div class="modal-buttons">
+        <button id="confirm-delete" class="delete-btn">Eliminar</button>
+        <button id="cancel-delete" class="cancel-btn">Cancelar</button>
+      </div>
+    </div>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  <script src="config.js"></script>
+  <script src="utils.js"></script>
+  <script src="gallery.js"></script>
   <script src="main.js"></script>
-  <footer>&copy; 2025 Mi Galería Romántica</footer>
+  <footer role="contentinfo">&copy; 2025 Mi Galería Romántica</footer>
 </body>
 </html>
