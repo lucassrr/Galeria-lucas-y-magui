@@ -224,6 +224,82 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
+  // Configurar controles de vista y ordenación para la galería principal
+  const galleryGridBtn = document.getElementById('gallery-grid-view');
+  const galleryMosaicBtn = document.getElementById('gallery-mosaic-view');
+  const galleryOrderSelect = document.getElementById('gallery-order');
+  
+  if (galleryGridBtn && galleryMosaicBtn) {
+    // Vista en cuadrícula
+    galleryGridBtn.addEventListener('click', () => {
+      gallery.classList.remove('mosaic-view');
+      galleryGridBtn.classList.add('active');
+      galleryMosaicBtn.classList.remove('active');
+      localStorage.setItem('galleryView', 'grid');
+      loadPhotosFromSupabase(CONFIG.TABLES.GALLERY, gallery, currentGalleryPage);
+    });
+    
+    // Vista en mosaico
+    galleryMosaicBtn.addEventListener('click', () => {
+      gallery.classList.add('mosaic-view');
+      galleryMosaicBtn.classList.add('active');
+      galleryGridBtn.classList.remove('active');
+      localStorage.setItem('galleryView', 'mosaic');
+      loadPhotosFromSupabase(CONFIG.TABLES.GALLERY, gallery, currentGalleryPage);
+    });
+    
+    // Cargar vista guardada
+    const savedGalleryView = localStorage.getItem('galleryView');
+    if (savedGalleryView === 'mosaic') {
+      galleryMosaicBtn.click();
+    }
+  }
+  
+  // Ordenación de la galería principal
+  if (galleryOrderSelect) {
+    galleryOrderSelect.addEventListener('change', () => {
+      loadPhotosFromSupabase(CONFIG.TABLES.GALLERY, gallery, 1, galleryOrderSelect.value);
+    });
+  }
+  
+  // Configurar controles de vista y ordenación para la galería de fotos graciosas
+  const funnyGridBtn = document.getElementById('funny-grid-view');
+  const funnyMosaicBtn = document.getElementById('funny-mosaic-view');
+  const funnyOrderSelect = document.getElementById('funny-order');
+  
+  if (funnyGridBtn && funnyMosaicBtn) {
+    // Vista en cuadrícula
+    funnyGridBtn.addEventListener('click', () => {
+      funnyGallery.classList.remove('mosaic-view');
+      funnyGridBtn.classList.add('active');
+      funnyMosaicBtn.classList.remove('active');
+      localStorage.setItem('funnyView', 'grid');
+      loadPhotosFromSupabase(CONFIG.TABLES.FUNNY, funnyGallery, currentFunnyPage);
+    });
+    
+    // Vista en mosaico
+    funnyMosaicBtn.addEventListener('click', () => {
+      funnyGallery.classList.add('mosaic-view');
+      funnyMosaicBtn.classList.add('active');
+      funnyGridBtn.classList.remove('active');
+      localStorage.setItem('funnyView', 'mosaic');
+      loadPhotosFromSupabase(CONFIG.TABLES.FUNNY, funnyGallery, currentFunnyPage);
+    });
+    
+    // Cargar vista guardada
+    const savedFunnyView = localStorage.getItem('funnyView');
+    if (savedFunnyView === 'mosaic') {
+      funnyMosaicBtn.click();
+    }
+  }
+  
+  // Ordenación de la galería de fotos graciosas
+  if (funnyOrderSelect) {
+    funnyOrderSelect.addEventListener('change', () => {
+      loadPhotosFromSupabase(CONFIG.TABLES.FUNNY, funnyGallery, 1, funnyOrderSelect.value);
+    });
+  }
+
   // Event listeners para inputs de archivos
   photoInput.addEventListener('change', e => {
     handlePhotos(

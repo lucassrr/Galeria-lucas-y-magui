@@ -423,11 +423,47 @@ body.dark .sidebar-links li a:hover {
     top: 0.5em;
     right: 0.5em;
     font-size: 1.5em;
+    width: 40px;
+    height: 40px;
+    background: rgba(0,0,0,0.3);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
   .modal-img {
     max-width: 95vw;
     max-height: 80vh;
   }
+  
+  /* Mejoras para los controles de galería en móvil */
+  .gallery-controls {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1em;
+  }
+  
+  .order-controls {
+    width: 100%;
+  }
+  
+  .order-controls select {
+    width: 100%;
+    padding: 0.8em;
+    font-size: 1em;
+  }
+  
+  .view-controls {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .view-btn {
+    width: 48px;
+    height: 48px;
+    font-size: 1.4em;
+  }
+}
   
   /* Mejoras para pantallas muy pequeñas */
   @media (max-width: 400px) {
@@ -438,6 +474,34 @@ body.dark .sidebar-links li a:hover {
     .gallery img,
     .funny-gallery img {
       height: 200px;
+    }
+    
+    .gallery.mosaic-view,
+    .funny-gallery.mosaic-view {
+      grid-template-columns: 1fr;
+      grid-auto-rows: auto;
+    }
+    
+    .photo-large, 
+    .photo-medium {
+      grid-column: span 1;
+      grid-row: span 1;
+    }
+    
+    .photo-large img, 
+    .photo-medium img {
+      height: 220px;
+    }
+    
+    .sidebar-logo {
+      max-width: 150px;
+      font-size: 0.9em;
+    }
+    
+    .modal-close {
+      width: 50px;
+      height: 50px;
+      font-size: 1.8em;
     }
   }
 }
@@ -462,6 +526,25 @@ body.dark .sidebar-links li a:hover {
     padding: 0;
     display: flex;
     justify-content: center;
+  }
+  
+  .upload-label {
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    margin-bottom: 1rem;
+  }
+  
+  /* Ajustes para el botón de eliminar en móviles */
+  .trash-icon {
+    width: 44px;
+    height: 44px;
+    padding: 10px;
+    background: rgba(255,255,255,0.9);
+  }
+  
+  /* Ajustes para la paginación en móviles */
+  .pagination {
+    padding: 0.5em 0;
+    margin-bottom: 2em;
   }
 }
 

@@ -1,31 +1,72 @@
 // Utilidades generales para la aplicación
 
-// Compresión automática de imágenes antes de guardar
+// Compresión automática de imágenes antes de guardar con optimizaciones
 function compressImage(file, maxWidth = CONFIG.MAX_IMAGE_WIDTH, maxHeight = CONFIG.MAX_IMAGE_HEIGHT, quality = CONFIG.IMAGE_QUALITY) {
   return new Promise((resolve, reject) => {
+    // Verificar si el archivo ya está comprimido o es pequeño
+    if (file.size < 200 * 1024 && file.type !== 'image/gif') { // Menos de 200KB
+      return resolve(file);
+    }
+    
+    // Usar URL.createObjectURL en lugar de FileReader para mejor rendimiento
     const img = new Image();
-    const reader = new FileReader();
-    reader.onload = e => { img.src = e.target.result; };
+    const objectUrl = URL.createObjectURL(file);
+    
     img.onload = () => {
+      // Liberar el objectURL después de cargar
+      URL.revokeObjectURL(objectUrl);
+      
       let { width, height } = img;
+      
+      // Determinar el factor de compresión basado en el tamaño del archivo
+      let compressionQuality = quality;
+      if (file.size > 2 * 1024 * 1024) { // Más de 2MB
+        compressionQuality = Math.min(quality, 0.6);
+      } else if (file.size > 1 * 1024 * 1024) { // Más de 1MB
+        compressionQuality = Math.min(quality, 0.7);
+      }
+      
+      // Redimensionar si es necesario
       if (width > maxWidth || height > maxHeight) {
         const scale = Math.min(maxWidth / width, maxHeight / height);
         width = Math.round(width * scale);
         height = Math.round(height * scale);
       }
-      const canvas = document.createElement('canvas');
+      
+      // Usar OffscreenCanvas si está disponible para mejor rendimiento
+      const canvas = typeof OffscreenCanvas !== 'undefined' 
+        ? new OffscreenCanvas(width, height) 
+        : document.createElement('canvas');
+      
       canvas.width = width;
       canvas.height = height;
+      
       const ctx = canvas.getContext('2d');
+      ctx.imageSmoothingQuality = 'high';
       ctx.drawImage(img, 0, 0, width, height);
-      canvas.toBlob(
-        blob => resolve(blob),
-        'image/jpeg',
-        quality
-      );
+      
+      // Determinar el formato de salida óptimo
+      const outputFormat = file.type === 'image/png' ? 'image/png' : 'image/jpeg';
+      
+      if (typeof OffscreenCanvas !== 'undefined') {
+        canvas.convertToBlob({ type: outputFormat, quality: compressionQuality })
+          .then(blob => resolve(blob))
+          .catch(reject);
+      } else {
+        canvas.toBlob(
+          blob => resolve(blob),
+          outputFormat,
+          compressionQuality
+        );
+      }
     };
-    img.onerror = reject;
-    reader.readAsDataURL(file);
+    
+    img.onerror = () => {
+      URL.revokeObjectURL(objectUrl);
+      reject(new Error('Error al cargar la imagen'));
+    };
+    
+    img.src = objectUrl;
   });
 }
 
