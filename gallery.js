@@ -108,7 +108,7 @@ async function loadPhotosFromSupabase(table, container, page = 1) {
   updateEmptyMessages();
 }
 
-// Crear foto en la galería con lazy loading
+// Crear foto en la galería con lazy loading y efectos
 function createPhoto(url, container, table, id = null) {
   const div = document.createElement('div');
   div.className = 'photo-container';
@@ -118,6 +118,9 @@ function createPhoto(url, container, table, id = null) {
   img.loading = 'lazy'; // Atributo nativo de lazy loading
   img.alt = "Foto subida";
   img.src = url; // Cargar directamente la imagen sin placeholder
+  
+  // Añadir efecto de aparición con retraso aleatorio
+  img.style.animationDelay = (Math.random() * 0.5) + 's';
   
   // Click para ver imagen ampliada
   img.addEventListener('click', () => {

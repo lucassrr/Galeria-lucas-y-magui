@@ -1,6 +1,22 @@
 // Inicialización de la aplicación
 
 document.addEventListener('DOMContentLoaded', () => {
+  // Verificar si el usuario ya ha visitado la página
+  const hasVisited = sessionStorage.getItem('hasVisited');
+  const splash = document.getElementById('splash');
+  
+  // Si ya ha visitado la página, ocultar el splash screen inmediatamente
+  if (hasVisited) {
+    if (splash) {
+      splash.style.display = 'none';
+    }
+  } else {
+    // Marcar como visitado para futuras recargas
+    sessionStorage.setItem('hasVisited', 'true');
+    // Crear efecto de confeti solo en la primera visita
+    createConfetti();
+  }
+  
   // Referencias DOM
   const gallery = document.getElementById('gallery');
   const funnyGallery = document.getElementById('funny-gallery');
@@ -33,11 +49,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Splash screen
   const enterBtn = document.getElementById('enter-gallery');
-  if (enterBtn) {
+  if (enterBtn && splash) {
     enterBtn.addEventListener('click', () => {
-      document.getElementById('splash').style.opacity = 0;
+      splash.style.opacity = 0;
       setTimeout(() => {
-        document.getElementById('splash').style.display = 'none';
+        splash.style.display = 'none';
       }, 700);
     });
   }
@@ -47,24 +63,33 @@ document.addEventListener('DOMContentLoaded', () => {
     modalClose.addEventListener('click', () => {
       modal.classList.remove('show');
       // Ocultar splash
-      document.getElementById('splash').style.opacity = 0;
-      setTimeout(() => {
-        document.getElementById('splash').style.display = 'none';
-      }, 700);
+      if (splash) {
+        splash.style.opacity = 0;
+        setTimeout(() => {
+          splash.style.display = 'none';
+        }, 700);
+      }
     });
 
     // Cerrar modal al hacer click fuera del contenido
     modal.addEventListener('click', e => {
       if (e.target === modal) {
         modal.classList.remove('show');
-        document.getElementById('splash').style.opacity = 0;
-        setTimeout(() => {
-          document.getElementById('splash').style.display = 'none';
-        }, 700);
+        if (splash) {
+          splash.style.opacity = 0;
+          setTimeout(() => {
+            splash.style.display = 'none';
+          }, 700);
+        }
       }
     });
   }
 
+  // Crear overlay para cerrar sidebar al hacer clic fuera
+  const sidebarOverlay = document.createElement('div');
+  sidebarOverlay.className = 'sidebar-overlay';
+  document.body.appendChild(sidebarOverlay);
+  
   // Sidebar toggle con accesibilidad
   if (sidebarToggle && sidebar) {
     sidebarToggle.addEventListener('click', () => {
@@ -72,6 +97,21 @@ document.addEventListener('DOMContentLoaded', () => {
       sidebar.classList.toggle('active');
       sidebarToggle.classList.toggle('active');
       sidebarToggle.setAttribute('aria-expanded', !isExpanded);
+      
+      // Mostrar/ocultar overlay
+      if (!isExpanded) {
+        sidebarOverlay.classList.add('active');
+      } else {
+        sidebarOverlay.classList.remove('active');
+      }
+    });
+    
+    // Cerrar sidebar al hacer clic en el overlay
+    sidebarOverlay.addEventListener('click', () => {
+      sidebar.classList.remove('active');
+      sidebarToggle.classList.remove('active');
+      sidebarToggle.setAttribute('aria-expanded', 'false');
+      sidebarOverlay.classList.remove('active');
     });
   }
 
@@ -82,31 +122,51 @@ document.addEventListener('DOMContentLoaded', () => {
         sidebar.classList.remove('active');
         sidebarToggle.classList.remove('active');
         sidebarToggle.setAttribute('aria-expanded', 'false');
+        sidebarOverlay.classList.remove('active');
       }
     });
   });
 
-  // Navegación de secciones
-  const navHome = document.getElementById('nav-home');
-  const navFunny = document.getElementById('nav-funny');
-  if (navHome && mainSection && funnySection && sidebar) {
-    navHome.addEventListener('click', e => {
-      e.preventDefault();
+  // Función para manejar rutas
+  function handleRoute() {
+    // Obtener el hash actual o usar el guardado en sessionStorage
+    let hash = window.location.hash;
+    
+    // Si no hay hash en la URL pero hay uno guardado, usarlo y actualizar la URL
+    if (!hash && sessionStorage.getItem('currentRoute')) {
+      hash = sessionStorage.getItem('currentRoute');
+      window.location.hash = hash;
+    } else if (!hash) {
+      // Si no hay hash ni ruta guardada, usar la ruta por defecto
+      hash = '#/inicio';
+      window.location.hash = hash;
+    }
+    
+    // Guardar la ruta actual en sessionStorage
+    sessionStorage.setItem('currentRoute', hash);
+    
+    if (hash === '#/inicio') {
       mainSection.classList.remove('hidden');
       funnySection.classList.add('hidden');
-      sidebar.classList.remove('active');
-      sidebarToggle.setAttribute('aria-expanded', 'false');
-    });
-  }
-  if (navFunny && mainSection && funnySection && sidebar) {
-    navFunny.addEventListener('click', e => {
-      e.preventDefault();
+    } else if (hash === '#/graciosas') {
       mainSection.classList.add('hidden');
       funnySection.classList.remove('hidden');
+    }
+    
+    // Cerrar sidebar si está abierta
+    if (sidebar && sidebar.classList.contains('active')) {
       sidebar.classList.remove('active');
+      sidebarToggle.classList.remove('active');
       sidebarToggle.setAttribute('aria-expanded', 'false');
-    });
+      sidebarOverlay.classList.remove('active');
+    }
   }
+
+  // Escuchar cambios en la URL
+  window.addEventListener('hashchange', handleRoute);
+  
+  // Manejar la ruta inicial
+  handleRoute();
 
   // Cargar tema guardado y configurar alternador
   if (themeToggle) {
@@ -193,10 +253,31 @@ document.addEventListener('DOMContentLoaded', () => {
   loadPhotosFromSupabase(CONFIG.TABLES.GALLERY, gallery);
   loadPhotosFromSupabase(CONFIG.TABLES.FUNNY, funnyGallery);
   
-  if (funnySection && mainSection) {
-    funnySection.classList.add('hidden');
-    mainSection.classList.remove('hidden');
-  }
+  // Aplicar la ruta inicial (después de cargar las fotos)
+  handleRoute();
   
   updateEmptyMessages();
+  
+  // Función para crear efecto de confeti
+  function createConfetti() {
+    const colors = ['#f2d74e', '#f5576c', '#f093fb', '#a1c4fd', '#fad0c4'];
+    const confettiCount = 50;
+    
+    for (let i = 0; i < confettiCount; i++) {
+      setTimeout(() => {
+        const confetti = document.createElement('div');
+        confetti.className = 'confetti';
+        confetti.style.left = Math.random() * 100 + 'vw';
+        confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        confetti.style.width = Math.random() * 10 + 5 + 'px';
+        confetti.style.height = confetti.style.width;
+        
+        document.body.appendChild(confetti);
+        
+        setTimeout(() => {
+          confetti.remove();
+        }, 3000);
+      }, i * 150);
+    }
+  }
 });
