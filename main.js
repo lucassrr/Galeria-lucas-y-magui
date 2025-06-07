@@ -146,11 +146,11 @@ document.addEventListener('DOMContentLoaded', () => {
     sessionStorage.setItem('currentRoute', hash);
     
     if (hash === '#/inicio') {
-      mainSection.classList.remove('hidden');
-      funnySection.classList.add('hidden');
+      mainSection.style.display = 'block';
+      funnySection.style.display = 'none';
     } else if (hash === '#/graciosas') {
-      mainSection.classList.add('hidden');
-      funnySection.classList.remove('hidden');
+      mainSection.style.display = 'none';
+      funnySection.style.display = 'block';
     }
     
     // Cerrar sidebar si está abierta
@@ -325,12 +325,12 @@ document.addEventListener('DOMContentLoaded', () => {
     );
   });
 
-  // Cargar fotos al iniciar
+  // Aplicar la ruta inicial primero para asegurar que se muestre la sección correcta
+  handleRoute();
+  
+  // Cargar fotos después de establecer la ruta
   loadPhotosFromSupabase(CONFIG.TABLES.GALLERY, gallery);
   loadPhotosFromSupabase(CONFIG.TABLES.FUNNY, funnyGallery);
-  
-  // Aplicar la ruta inicial (después de cargar las fotos)
-  handleRoute();
   
   updateEmptyMessages();
   
